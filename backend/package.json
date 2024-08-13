@@ -1,0 +1,24 @@
+{
+  "name": "eternity",
+  "version": "0.0.1",
+  "description": "Capture your memories and messages in a digital time capsule to be unlocked in the future. TimeBox allows you to create, store, and share personal content—such as text, photos, and videos—that will be revealed on a date of your choosing. Whether for personal reflection, gifts, or special occasions, TimeBox ensures your moments are preserved and shared at just the right time.",
+  "main": "index.html",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon src/server.js"
+  },
+  "keywords": [],
+  "author": "Apurva",
+  "license": "",
+  "devDependencies": {
+    "express": "4.19.2"
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "chalk": "^5.3.0",
+    "dotenv": "^16.4.5",
+    "express": "4.19.2",
+    "jsonwebtoken": "^9.0.2",
+    "uuid": "^10.0.0"
+  }
+}

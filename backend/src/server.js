@@ -6,11 +6,14 @@ import errorHandler from './middlewares/errorHandler.js';
 
 // Routes
 import userRoutes from './routes/userRoutes.js'
+import connectDB from './config/mongoDB.js';
+
 
 // MiddleWare
 const app = express();
-
 dotenv.config();
+
+connectDB()
 app.use(express.json())
 
 //? Routes

@@ -1,0 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@layer base {
+    @font-face {
+        font-family: 'Neue Montreal';
+        font-style: normal;
+        font-weight: 400;
+        src: url(/frontend/src/assets/font/Neue\ Montreal\ Regular\ 400.otf) format('otf');
+    }
+}

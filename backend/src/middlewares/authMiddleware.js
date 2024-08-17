@@ -2,12 +2,12 @@ import jwt from 'jsonwebtoken'
 import ApplicationError from '../config/applicationError.js';
 
 export const verifyToken = (req, res, next) => {
-    const token = req.header('Authorization').split(' ')[1];
+    const token = req.header('Authorization');
 
     if (!token) throw new ApplicationError("Access denied", 401)
 
     try {
-        const decoded = jwt.verify(token, process.env.JWTSECRET)
+        const decoded = jwt.verify(token.split(' ')[1], process.env.JWTSECRET)
         req.userID = decoded.userID
         next()
     } catch (error) {

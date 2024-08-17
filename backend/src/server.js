@@ -6,8 +6,8 @@ import errorHandler from './middlewares/errorHandler.js';
 
 // Routes
 import userRoutes from './routes/userRoutes.js'
+import capsuleRoutes from './routes/capsuleRoutes.js'
 import connectDB from './config/mongoDB.js';
-
 
 // MiddleWare
 const app = express();
@@ -18,6 +18,7 @@ app.use(express.json())
 
 //? Routes
 app.use("/user", userRoutes)
+app.use("/capsule", capsuleRoutes)
 
 // ! Error Handler
 app.use(errorHandler)

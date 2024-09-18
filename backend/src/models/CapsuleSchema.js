@@ -35,6 +35,14 @@ const CapsuleSchema = new Schema({
     },
     decryptedContent: {
         type: String
+    },
+    media: {
+        type: [String],
+        default: []
+    },
+    notification: {
+        type: Boolean,
+        default: true
     }
 })
 const model = mongoose.model("Capsule", CapsuleSchema)

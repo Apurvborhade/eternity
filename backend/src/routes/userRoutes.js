@@ -1,5 +1,5 @@
 import express from 'express'
-import { loginUser, registerUser } from '../controllers/authControllers.js';
+import { loginUser, logoutUser, registerUser } from '../controllers/authControllers.js';
 
 
 
@@ -10,13 +10,19 @@ const router = express.Router();
  * @method POST
  */
 
-router.post('/api/v1/register', registerUser)
+router.post('/register', registerUser)
 
 /**
  * Login User
  * @method POST
  */
-router.post('/api/v1/login', loginUser)
+router.post('/login', loginUser)
+
+/**
+ * Logout User
+ * @method POST
+ */
+router.post('/logout', logoutUser)
 
 
 export default router

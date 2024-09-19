@@ -33,8 +33,18 @@ export const createUserService = async (username, email, hashedPassword) => {
         const token = jwt.sign({ userID: results.rows[0].id }, process.env.JWTSECRET, {
             expiresIn: '1h'
         })
+
+        const userObject = {
+            id:results.rows[0].id,
+            username:results.rows[0].username,
+            email:results.rows[0].email,
+            created_at:results.rows[0].created_at,
+            updated_at:results.rows[0].updated_at
+        }
+       
+
         return {
-            user: results.rows,
+            user: userObject,
             token
         }
     } catch (error) {
@@ -61,8 +71,17 @@ export const loginUserService = async (email, password) => {
         const token = jwt.sign({ userID: rows[0].id }, process.env.JWTSECRET, {
             expiresIn: '1h'
         })
+
+
+        const userObject = {
+            id:rows[0]?.id,
+            username:rows[0]?.username,
+            email:rows[0]?.email,
+            created_at:rows[0]?.created_at,
+            updated_at:rows[0]?.updated_at
+        }
         return {
-            user: rows[0],
+            user: userObject,
             token
         }
     } catch (error) {

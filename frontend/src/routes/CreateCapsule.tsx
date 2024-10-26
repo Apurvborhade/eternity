@@ -23,6 +23,7 @@ interface CapsuleData {
     content: string,
     unlockDate: Date | undefined,
     status: string,
+    file:null | object,
     notification: boolean
 }
 const CreateCapsule = () => {
@@ -42,6 +43,7 @@ const CreateCapsule = () => {
         content: "",
         unlockDate: undefined,
         status: "",
+        file:null,
         notification: true
     });
 
@@ -50,6 +52,12 @@ const CreateCapsule = () => {
         setFormData({
             ...formData,
             unlockDate: newDate,
+        })
+    }
+    const fileUpload = (e: any) => {
+        setFormData({
+            ...formData,
+            file:e.target.files[0]
         })
     }
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | string) => {
@@ -70,7 +78,7 @@ const CreateCapsule = () => {
     }
     React.useEffect(() => {
         console.log(formData)
-    },[formData])
+    }, [formData])
     const saveCapsule = async () => {
         try {
             const capsule = await createCapsule(formData).unwrap();
@@ -205,6 +213,7 @@ const CreateCapsule = () => {
                                                         width="84"
                                                     />
                                                 </button>
+
                                                 <button className="absolute top-1 right-1 bg-white bg-opacity-10 rounded-full p-1" aria-label="Delete image">
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                                         <polyline points="3 6 5 6 21 6"></polyline>
@@ -212,10 +221,11 @@ const CreateCapsule = () => {
                                                     </svg>
                                                 </button>
                                             </div>
-                                            <button className="flex aspect-square w-full items-center justify-center rounded-md border border-dashed">
+                                            <label htmlFor="file-upload" className="flex aspect-square w-full relative  items-center justify-center rounded-md border border-dashed cursor-pointer">
+                                                <input id="file-upload" type="file" onChange={fileUpload} />
                                                 <Upload className="h-4 w-4 text-muted-foreground" />
                                                 <span className="sr-only">Upload</span>
-                                            </button>
+                                            </label>
                                         </div>
                                     </div>
                                 </CardContent>

@@ -6,6 +6,7 @@ import { decryptContent, encryptContent } from '../utils/encryption.js'
 
 export const createCapsule = async (req, res, next) => {
     const { title, content, unlockDate, status,notification } = req.body
+
     const createdBy = req.userID
     try {
         if (!title || !content || !unlockDate || !status ) {
@@ -22,7 +23,8 @@ export const createCapsule = async (req, res, next) => {
             unlockDate: isoDate,
             createdBy,
             status,
-            notification
+            notification,
+
         })
         const result = await newCapsule.save();
 

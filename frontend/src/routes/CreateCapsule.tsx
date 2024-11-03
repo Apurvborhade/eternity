@@ -23,13 +23,15 @@ interface CapsuleData {
     content: string,
     unlockDate: Date | undefined,
     status: string,
-    file:null | object,
+    files: Array<Blob | MediaSource>,
     notification: boolean
 }
 const CreateCapsule = () => {
     const [date, setDate] = React.useState<Date | undefined>()
     const navigate = useNavigate();
+    
     const [notificationSwitchValue, setNotificationSwitchValue] = React.useState(true)
+
     const handleNotificationSwitchChange = (checked: boolean) => {
         setNotificationSwitchValue(checked)
         setFormData({
@@ -43,7 +45,7 @@ const CreateCapsule = () => {
         content: "",
         unlockDate: undefined,
         status: "",
-        file:null,
+        files: [],
         notification: true
     });
 
@@ -55,9 +57,24 @@ const CreateCapsule = () => {
         })
     }
     const fileUpload = (e: any) => {
+        if (!e.target.files[0].type.startsWith("image/")) {
+            alert("Image Only")
+            return;
+        }
+        const newFile = e.target.files[0]
         setFormData({
             ...formData,
-            file:e.target.files[0]
+        })
+        formData.files?.push(newFile)
+
+        console.log(formData)
+    }
+    const deleteMedia = (file: Blob | object) => {
+        const filteredData = formData.files.filter((value) => value != file);
+        
+        setFormData({
+            ...formData,
+            files:filteredData
         })
     }
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | string) => {
@@ -81,14 +98,9 @@ const CreateCapsule = () => {
     }, [formData])
     const saveCapsule = async () => {
         try {
+            console.log(formData)
             const capsule = await createCapsule(formData).unwrap();
-            // setFormData({
-            //     title: "",
-            //     content: "",
-            //     unlockDate: undefined,
-            //     status: "",
-            //     notification: true
-            // })
+            
             navigate('/dashboard')
         } catch (error) {
             console.log(error)
@@ -178,54 +190,46 @@ const CreateCapsule = () => {
                                 </CardHeader>
                                 <CardContent>
                                     <div className="grid gap-2">
-                                        <img
-                                            alt="Product image"
-                                            className="aspect-square w-full rounded-md object-cover"
-                                            height="300"
-                                            src="https://images.unsplash.com/photo-1556559322-b5071efadc88?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                                            width="300"
-                                        />
-                                        <div className="grid grid-cols-3 gap-2">
-                                            <div className="relative">
-                                                <button>
-                                                    <img
-                                                        alt="Product image"
-                                                        className="aspect-square w-full rounded-md object-cover"
-                                                        height="84"
-                                                        src="https://images.unsplash.com/photo-1556559322-b5071efadc88?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                                                        width="84"
-                                                    />
-                                                </button>
-                                                <button className="absolute top-1 right-1 bg-white bg-opacity-10 rounded-full p-1" aria-label="Delete image">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                                        <polyline points="3 6 5 6 21 6"></polyline>
-                                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                                                    </svg>
-                                                </button>
-                                            </div>
-                                            <div className="relative">
-                                                <button>
-                                                    <img
-                                                        alt="Product image"
-                                                        className="aspect-square w-full rounded-md object-cover"
-                                                        height="84"
-                                                        src="https://images.unsplash.com/photo-1556559322-b5071efadc88?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                                                        width="84"
-                                                    />
-                                                </button>
+                                        {formData.files?.length != 0 ? (
+                                            <img
+                                                alt="Product image"
+                                                className="aspect-square w-full rounded-md object-cover"
+                                                height="300"
 
-                                                <button className="absolute top-1 right-1 bg-white bg-opacity-10 rounded-full p-1" aria-label="Delete image">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                                        <polyline points="3 6 5 6 21 6"></polyline>
-                                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                                                    </svg>
-                                                </button>
-                                            </div>
-                                            <label htmlFor="file-upload" className="flex aspect-square w-full relative  items-center justify-center rounded-md border border-dashed cursor-pointer">
-                                                <input id="file-upload" type="file" onChange={fileUpload} />
-                                                <Upload className="h-4 w-4 text-muted-foreground" />
-                                                <span className="sr-only">Upload</span>
-                                            </label>
+                                                src={URL.createObjectURL(formData.files[0])}
+                                                width="300"
+                                            />
+                                        ) : (
+                                            <></>
+                                        )}
+                                        <div className="grid grid-cols-3 gap-2">
+                                            {formData.files.map((file) => (
+                                                <div className="relative">
+                                                    <button>
+                                                        <img
+                                                            alt="Product image"
+                                                            className="aspect-square w-full rounded-md object-cover"
+                                                            height="84"
+                                                            src={URL.createObjectURL(file)}
+                                                            width="84"
+                                                        />
+                                                    </button>
+                                                    <button className="absolute top-1 right-1 bg-white bg-opacity-10 rounded-full p-1" aria-label="Delete image" onClick={() => deleteMedia(file)}>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                            <polyline points="3 6 5 6 21 6"></polyline>
+                                                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                                        </svg>
+                                                    </button>
+                                                </div>
+                                            ))}
+
+                                            {formData.files.length < 3 && (
+                                                <label htmlFor="file-upload" className="flex aspect-square w-full relative  items-center justify-center rounded-md border border-dashed cursor-pointer">
+                                                    <input id="file-upload" type="file" onChange={fileUpload} accept='image/*' />
+                                                    <Upload className="h-4 w-4 text-muted-foreground" />
+                                                    <span className="sr-only">Upload</span>
+                                                </label>
+                                            )}
                                         </div>
                                     </div>
                                 </CardContent>

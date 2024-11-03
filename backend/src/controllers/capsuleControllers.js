@@ -5,25 +5,27 @@ import { decryptContent, encryptContent } from '../utils/encryption.js'
 
 
 export const createCapsule = async (req, res, next) => {
-    const { title, content, unlockDate, status,notification } = req.body
+    const { title, content, unlockDate, status, notification } = req.body
 
+    const media  = res.locals;
     const createdBy = req.userID
     try {
-        if (!title || !content || !unlockDate || !status ) {
+        if (!title || !content || !unlockDate || !status) {
             throw new ApplicationError("Please Provide All The Details", 401)
         }
-        const dateObj = new Date(unlockDate);   
+        const dateObj = new Date(unlockDate);
         if (isNaN(dateObj.getTime())) {
             return res.status(400).json({ error: 'Invalid date format' });
         }
         const isoDate = dateObj.toISOString();
         const newCapsule = new Capsule({
             title,
-            content: status ==='locked'? encryptContent(content) : content,
+            content: status === 'locked' ? encryptContent(content) : content,
             unlockDate: isoDate,
             createdBy,
             status,
             notification,
+            media
 
         })
         const result = await newCapsule.save();
@@ -68,7 +70,7 @@ export const uploadFile = async (req, res, next) => {
             throw new ApplicationError("Invalid CapusleID", 403)
         }
         const updatedCapsule = await Capsule.findByIdAndUpdate(capsuleID, {
-            $push: { media: uploadedFile.fileId }
+           media: uploadedFile
         }, { new: true })
 
         if (!updatedCapsule) {

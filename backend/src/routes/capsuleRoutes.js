@@ -9,7 +9,7 @@ const router = express.Router();
  * @method POST
  */
 router.get('/getcapsule', verifyToken, getCapsule);
-router.post('/create', verifyToken, createCapsule)
+router.post('/create', verifyToken, upload.array('files'),uploadB2,createCapsule)
 router.post('/unlock/:id', verifyToken, unlockCapsule)
 router.post('/upload/:capsuleID', verifyToken, upload.any(), uploadB2, uploadFile)
 

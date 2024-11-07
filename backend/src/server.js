@@ -5,6 +5,7 @@ import chalk from 'chalk';
 import errorHandler from './middlewares/errorHandler.js';
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
+import bodyParser from 'body-parser'
 // Routes
 import userRoutes from './routes/userRoutes.js'
 import capsuleRoutes from './routes/capsuleRoutes.js'
@@ -18,7 +19,7 @@ dotenv.config();
 connectDB()
 app.use(express.json())
 app.use(cookieParser())
-
+app.use(bodyParser.urlencoded({ extended: true }))
 app.use(
     cors({
         origin: 'http://localhost:5173',

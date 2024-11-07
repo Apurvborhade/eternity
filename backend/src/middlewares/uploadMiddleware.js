@@ -10,35 +10,46 @@ const { BACKBLAZE_KEYID,
     BACKBLAZE_BUCKETID } = process.env
 
 export const uploadB2 = async (req, res, next) => {
+    console.log(req.body)
     try {
         const b2 = new B2({
             applicationKeyId: BACKBLAZE_KEYID,
             applicationKey: BACKBLAZE_APPKEY
         })
 
-        if (!mongoose.Types.ObjectId.isValid(req.params.capsuleID)) {
-            throw new ApplicationError("Invalid Object Id", 403)
-        }
-        const capsuleToUpdate = await Capsule.findById(req.params.capsuleID)
-        if (!capsuleToUpdate) {
-            throw new ApplicationError("Cannot Find Capsule", 404)
-        }
+        // if (!mongoose.Types.ObjectId.isValid(req.params.capsuleID)) {
+        //     throw new ApplicationError("Invalid Object Id", 403)
+        // }
+        // const capsuleToUpdate = await Capsule.findById(req.params.capsuleID)
+        // if (!capsuleToUpdate) {
+        //     throw new ApplicationError("Cannot Find Capsule", 404)
+        // }
         const authResponse = await b2.authorize()
         const { downloadUrl } = authResponse.data
 
-        const { data: uploadData } = await b2.getUploadUrl({ bucketId: BACKBLAZE_BUCKETID })
-        const { authorizationToken, uploadUrl } = uploadData
-
-        const params = {
-            uploadUrl,
-            uploadAuthToken: authorizationToken,
-            filename: req.files[0].originalname,
-            data: req.files[0].buffer
-
+       
+        if (!req.files || req.files.length === 0) {
+            throw new ApplicationError("No files uploaded", 400);
         }
-        const { data: fileInfo } = await b2.uploadFile(params)
 
-        res.locals = fileInfo
+
+        const media = await Promise.all(req.files.map(async file => {
+            const { data: uploadData } = await b2.getUploadUrl({ bucketId: BACKBLAZE_BUCKETID })
+            const { authorizationToken, uploadUrl } = uploadData
+
+            const params = {
+                uploadUrl,
+                uploadAuthToken: authorizationToken,
+                filename: file.originalname,
+                data: file.buffer
+
+            }
+            const { data: fileInfo } = await b2.uploadFile(params)
+            return fileInfo
+
+        }))
+        
+        res.locals = media
         next()
     } catch (error) {
         next(error)

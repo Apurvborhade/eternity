@@ -20,15 +20,16 @@ interface CapsuleEror {
     }
 }
 interface CapsuleData {
-    title:string,
-    content:string,
-    unlockDate:Date | undefined,
-    status:string
+    title: string,
+    content: string,
+    unlockDate: Date | undefined,
+    status: string,
+    files: File[]
 }
 export const capsulesApi = createApi({
     reducerPath: 'capsulesApi',
     baseQuery: fetchBaseQuery({ baseUrl: "/api/v1/capsule", credentials: "include" }) as BaseQueryFn<string | FetchArgs, unknown, CapsuleEror, {}>,
-    tagTypes:['Capsules'],
+    tagTypes: ['Capsules'],
     endpoints: (builder) => ({
         fetchCapsules: builder.query<CapsuleResult[], void>({
             query: () => ({
@@ -38,14 +39,31 @@ export const capsulesApi = createApi({
             providesTags: ['Capsules'],
         }),
         createCapsule: builder.mutation<CapsuleResult, CapsuleData>({
-            query: (capsule) => ({
-                url: '/create',
-                method: 'POST',
-                body: capsule
-            }),
-            invalidatesTags: ['Capsules'],  
+            query: (capsule) => {
+                const formData = new FormData();
+                formData.append('title', capsule.title);
+                formData.append('content', capsule.content);
+                if (capsule.unlockDate) {
+                    formData.append('unlockDate', capsule.unlockDate.toISOString());
+                }
+                formData.append('status', capsule.status);
+
+                // Append each file
+                capsule.files.forEach(file => {
+                    formData.append('files', file); // Make sure this matches the Multer field name
+                });
+
+                return {
+                    url: '/create',
+                    method: 'POST',
+                    body: formData,
+                   
+                };
+
+            },
+            invalidatesTags: ['Capsules'],
         })
     })
 })
 
-export const { useFetchCapsulesQuery,useCreateCapsuleMutation } = capsulesApi
+export const { useFetchCapsulesQuery, useCreateCapsuleMutation } = capsulesApi

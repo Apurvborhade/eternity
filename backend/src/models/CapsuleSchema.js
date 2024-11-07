@@ -37,7 +37,7 @@ const CapsuleSchema = new Schema({
         type: String
     },
     media: {
-        type: [String],
+        type: [Object],
         default: []
     },
     notification: {

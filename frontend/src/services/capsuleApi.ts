@@ -1,4 +1,5 @@
 import { BaseQueryFn, FetchArgs, createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { url } from 'inspector'
 interface CapsuleResult {
     _id: string,
     title: string,
@@ -19,6 +20,7 @@ interface CapsuleEror {
         stack: string
     }
 }
+type capsuleId = string; 
 interface CapsuleData {
     title: string,
     content: string,
@@ -37,6 +39,12 @@ export const capsulesApi = createApi({
                 method: 'GET'
             }),
             providesTags: ['Capsules'],
+        }),
+        fetchCapsuleDetails: builder.query<CapsuleResult, any>({
+            query: (capsuleId) => ({
+                url: `/capsule/${String(capsuleId)}`,
+                method: "GET"
+            })
         }),
         createCapsule: builder.mutation<CapsuleResult, CapsuleData>({
             query: (capsule) => {
@@ -57,7 +65,7 @@ export const capsulesApi = createApi({
                     url: '/create',
                     method: 'POST',
                     body: formData,
-                   
+
                 };
 
             },
@@ -66,4 +74,4 @@ export const capsulesApi = createApi({
     })
 })
 
-export const { useFetchCapsulesQuery, useCreateCapsuleMutation } = capsulesApi
+export const { useFetchCapsulesQuery, useCreateCapsuleMutation,useFetchCapsuleDetailsQuery } = capsulesApi

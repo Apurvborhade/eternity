@@ -4,10 +4,15 @@ const capsuleSlice = createSlice({
     initialState: [],
     reducers: {
         getCapsule: (state, action) => {
+           return action.payload
+            
+        },
+        getCapsuleDetails: (state, action) => {
             return action.payload
+            
         }
     }
 })
 
-export const { getCapsule } = capsuleSlice.actions
+export const { getCapsule, getCapsuleDetails } = capsuleSlice.actions
 export default capsuleSlice.reducer

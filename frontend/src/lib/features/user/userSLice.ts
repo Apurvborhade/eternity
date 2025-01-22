@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import Cookies from 'js-cookie'
 
 const user = Cookies.get('user')
+
 const userSlice = createSlice({
     name: 'user',
     initialState: user ?
@@ -9,6 +10,7 @@ const userSlice = createSlice({
         : null,
     reducers: {
         addUser: (state, action) => {
+            state.user = action.payload
             return action.payload
         },
         removeUser: (state) => {

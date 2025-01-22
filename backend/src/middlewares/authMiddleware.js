@@ -20,6 +20,6 @@ export const injectToken = (req, res, next) => {
     if (token) {
         req.headers['authorization'] = `Bearer ${token}`
     }
-
+    
     next()
 }

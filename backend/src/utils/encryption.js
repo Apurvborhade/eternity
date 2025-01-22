@@ -1,7 +1,8 @@
 import crypto from 'crypto'
 import dotenv from 'dotenv'
-dotenv.config()
-const { ENCRYPTION_KEY, SECRECT_IV, ENCRYPTION_METHOD } = process.env
+dotenv.config({  });
+
+const { ENCRYPTION_KEY, SECRET_IV, ENCRYPTION_METHOD } = process.env
 
 const key = crypto
     .createHash('sha512')
@@ -12,10 +13,11 @@ const encryptionIV = crypto
     .digest('hex')
     .substring(0, 16)
 
+    
 
 
 export const encryptContent = (content) => {
-    const cipher = crypto.createCipheriv(ENCRYPTION_METHOD, ENCRYPTION_KEY, SECRECT_IV)
+    const cipher = crypto.createCipheriv('aes-256-cbc', ENCRYPTION_KEY, SECRET_IV)
 
     return Buffer.from(cipher.update(content, 'utf-8', 'hex') + cipher.final('hex')).toString('base64')
 }

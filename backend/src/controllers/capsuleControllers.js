@@ -4,20 +4,26 @@ import Capsule from '../models/CapsuleSchema.js'
 import { decryptContent, encryptContent } from '../utils/encryption.js'
 
 
+
 export const createCapsule = async (req, res, next) => {
     const { title, content, unlockDate, status, notification } = req.body
 
-    const media  = res.locals;
+   
+    const media = res.locals;
     const createdBy = req.userID
     try {
+       
         if (!title || !content || !unlockDate || !status) {
             throw new ApplicationError("Please Provide All The Details", 401)
         }
+        
         const dateObj = new Date(unlockDate);
         if (isNaN(dateObj.getTime())) {
             return res.status(400).json({ error: 'Invalid date format' });
         }
         const isoDate = dateObj.toISOString();
+       
+
         const newCapsule = new Capsule({
             title,
             content: status === 'locked' ? encryptContent(content) : content,
@@ -26,13 +32,17 @@ export const createCapsule = async (req, res, next) => {
             status,
             notification,
             media
-
+            
         })
+
+        
+
         const result = await newCapsule.save();
 
         res.send(result)
     } catch (error) {
         next(error)
+       
     }
 }
 
@@ -70,7 +80,7 @@ export const uploadFile = async (req, res, next) => {
             throw new ApplicationError("Invalid CapusleID", 403)
         }
         const updatedCapsule = await Capsule.findByIdAndUpdate(capsuleID, {
-           media: uploadedFile
+            media: uploadedFile
         }, { new: true })
 
         if (!updatedCapsule) {
@@ -93,4 +103,21 @@ export const getCapsule = async (req, res, next) => {
         next(error)
     }
 
+}
+
+export const getCapsuleDetails = async (req, res, next) => {
+    try {
+        
+        const capsuleId = req.params.id;
+        if (!mongoose.Types.ObjectId.isValid(capsuleId)) {
+            throw new ApplicationError("Invalid Capsule id", 403);
+        }
+        const capsule = await Capsule.findById(capsuleId)
+        if (!capsule) {
+            throw new ApplicationError("Cannot Find Capsule", 404);
+        }
+        res.send(capsule)
+    } catch (error) {
+        next(error)
+    }
 }

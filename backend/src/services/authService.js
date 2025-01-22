@@ -3,8 +3,6 @@ import ApplicationError from "../config/applicationError.js"
 import pool from "../config/db.js"
 import { checkEmailAlreadyExists, checkUsernameAlreadyExists, getUserByEmail, registerUserQuery } from "../config/queries.js"
 import { verifyPassword } from "../utils/authUtils.js";
-
-
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 /**
@@ -42,6 +40,7 @@ export const createUserService = async (username, email, hashedPassword) => {
             updated_at:results.rows[0].updated_at
         }
        
+
 
         return {
             user: userObject,

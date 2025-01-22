@@ -16,6 +16,7 @@ export const registerUser = async (req, res, next) => {
         res.status(200).json(results.user)
     } catch (error) {
         next(error)
+        
     }
 }
 

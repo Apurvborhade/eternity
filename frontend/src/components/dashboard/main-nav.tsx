@@ -34,30 +34,6 @@ export function MainNav({
                 >
                     ∞
                 </Link>
-                <Link
-                    to="/dashboard"
-                    className="text-sm font-medium transition-colors hover:text-primary pl-12"
-                >
-                    Overview
-                </Link>
-                <Link
-                    to="/dashboard/customers"
-                    className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
-                >
-                    Customers
-                </Link>
-                <Link
-                    to="/dashboard/products"
-                    className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
-                >
-                    Products
-                </Link>
-                <Link
-                    to="/dashboard/settings"
-                    className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
-                >
-                    Settings
-                </Link>
             </nav>
             <Sheet>
                 <SheetTrigger asChild>

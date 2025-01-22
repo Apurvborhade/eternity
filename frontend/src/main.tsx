@@ -12,6 +12,7 @@ import CreateCapsule from './routes/CreateCapsule.tsx'
 import { Provider } from 'react-redux'
 import { store } from '@/store.ts'
 import UpdateCapsule from './routes/UpdateCapsule.tsx'
+import CapsulePage from './routes/CapsulePage.tsx'
 const router = createBrowserRouter([
   {
     path: '/',
@@ -38,6 +39,10 @@ const router = createBrowserRouter([
     path: '/capsule/update-capsule',
     element: <UpdateCapsule />
   },
+  {
+    path:'/capsule/:id',
+    element:<CapsulePage />
+  }
 ])
 createRoot(document.getElementById('root')!).render(
   <Provider store={store}>

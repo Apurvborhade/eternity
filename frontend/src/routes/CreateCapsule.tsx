@@ -67,7 +67,6 @@ const CreateCapsule = () => {
         })
         formData.files?.push(newFile)
 
-        console.log(formData)
     }
     const deleteMedia = (file: Blob | object) => {
         const filteredData = formData.files.filter((value) => value != file);
@@ -78,6 +77,7 @@ const CreateCapsule = () => {
         })
     }
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | string) => {
+       
         if (typeof e != 'string') {
             if ('target' in e) {
                 const { name, value } = e.target;

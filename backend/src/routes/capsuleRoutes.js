@@ -1,5 +1,5 @@
 import express from 'express'
-import { createCapsule, getCapsule, unlockCapsule, uploadFile } from '../controllers/capsuleControllers.js';
+import { createCapsule, getCapsule, getCapsuleDetails, unlockCapsule, uploadFile } from '../controllers/capsuleControllers.js';
 import { verifyToken } from '../middlewares/authMiddleware.js';
 import { upload, uploadB2 } from '../middlewares/uploadMiddleware.js';
 const router = express.Router();
@@ -9,7 +9,8 @@ const router = express.Router();
  * @method POST
  */
 router.get('/getcapsule', verifyToken, getCapsule);
-router.post('/create', verifyToken, upload.array('files'),uploadB2,createCapsule)
+router.get('/capsule/:id', verifyToken, getCapsuleDetails);
+router.post('/create', verifyToken, upload.any('files'),uploadB2,createCapsule)
 router.post('/unlock/:id', verifyToken, unlockCapsule)
 router.post('/upload/:capsuleID', verifyToken, upload.any(), uploadB2, uploadFile)
 

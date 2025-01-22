@@ -54,7 +54,7 @@ const Dashboard = () => {
         }
         return <div>{error.message}</div>;
     }
-
+    
     return (
         <>
             <div className="flex-col md:flex">
@@ -73,7 +73,7 @@ const Dashboard = () => {
                     <h1 className="text-lg font-semibold md:text-2xl">All Capsules</h1>
                 </div>
                 <div
-                    className={` ${data?.length == 0 ? 'flex flex-1 items-center justify-center px-10 border border-dashed' : 'grid md:grid-cols-4 grid-cols-1 row-auto gap-y-10'}  rounded-lg  shadow-sm  md:px-0`} x-chunk="dashboard-02-chunk-1"
+                    className={` ${data?.length == 0 ? 'flex flex-1 items-center justify-center px-10 border border-dashed' : 'grid 2xl:grid-cols-4 md:grid-cols-3 md:gap-x-5 grid-cols-1 row-auto gap-y-10'}  rounded-lg  shadow-sm  md:px-0`} x-chunk="dashboard-02-chunk-1"
                 >
                     {data?.length == 0 && (
                         <div className="flex flex-col items-center gap-1 text-center">

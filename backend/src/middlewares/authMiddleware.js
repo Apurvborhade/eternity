@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken'
-import ApplicationError from '../config/applicationError.js';
+import ApplicationError from '../config/ApplicationError.js';
+
 
 export const verifyToken = (req, res, next) => {
     const token = req.header('Authorization');

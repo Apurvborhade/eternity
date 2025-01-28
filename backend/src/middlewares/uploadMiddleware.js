@@ -2,7 +2,7 @@ import multer from 'multer'
 import B2 from 'backblaze-b2'
 export const upload = multer({ storage: multer.memoryStorage() })
 import Capsule from '../models/CapsuleSchema.js'
-import ApplicationError from '../config/applicationError.js'
+import ApplicationError from '../config/ApplicationError.js'
 import mongoose from 'mongoose'
 
 const { BACKBLAZE_KEYID,

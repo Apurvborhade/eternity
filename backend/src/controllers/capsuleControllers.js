@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-import ApplicationError from '../config/applicationError.js'
+import ApplicationError from '../config/ApplicationError.js'
 import Capsule from '../models/CapsuleSchema.js'
 import { decryptContent, encryptContent } from '../utils/encryption.js'
 import B2 from 'backblaze-b2'

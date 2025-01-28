@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import ApplicationError from "../config/applicationError.js"
+import ApplicationError from "../config/ApplicationError.js"
 import pool from "../config/db.js"
 import { checkEmailAlreadyExists, checkUsernameAlreadyExists, getUserByEmail, registerUserQuery } from "../config/queries.js"
 import { verifyPassword } from "../utils/authUtils.js";

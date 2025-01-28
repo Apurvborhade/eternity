@@ -2,12 +2,12 @@ import mongoose from 'mongoose'
 import ApplicationError from '../config/applicationError.js'
 import Capsule from '../models/CapsuleSchema.js'
 import { decryptContent, encryptContent } from '../utils/encryption.js'
-
+import B2 from 'backblaze-b2'
 
 export const createCapsule = async (req, res, next) => {
     const { title, content, unlockDate, status, notification } = req.body
 
-    const media  = res.locals;
+    const media = res.locals;
     const createdBy = req.userID
     try {
         if (!title || !content || !unlockDate || !status) {
@@ -32,6 +32,7 @@ export const createCapsule = async (req, res, next) => {
 
         res.send(result)
     } catch (error) {
+        console.log(error)
         next(error)
     }
 }
@@ -48,7 +49,7 @@ export const unlockCapsule = async (req, res, next) => {
 
 
         const decryptedContent = decryptContent(capsule.content)
-        capsule.decryptedContent = decryptedContent
+        capsule.content = decryptedContent
         if (capsule.status !== 'unlocked') {
             capsule.status = 'unlocked'
         }
@@ -70,7 +71,7 @@ export const uploadFile = async (req, res, next) => {
             throw new ApplicationError("Invalid CapusleID", 403)
         }
         const updatedCapsule = await Capsule.findByIdAndUpdate(capsuleID, {
-           media: uploadedFile
+            media: uploadedFile
         }, { new: true })
 
         if (!updatedCapsule) {
@@ -93,4 +94,39 @@ export const getCapsule = async (req, res, next) => {
         next(error)
     }
 
+}
+
+export const getCapsuleById = async (req, res, next) => {
+    const capsuleId = req.params.id;
+
+    try {
+        const capsule = await Capsule.findById(capsuleId)
+
+        res.send(capsule)
+    } catch (error) {
+        next(error)
+    }
+}
+const b2 = new B2({
+    applicationKeyId: process.env.BACKBLAZE_KEYID, // Your key ID
+    applicationKey: process.env.BACKBLAZE_APPKEY, // Your application key
+});
+
+async function getFileUrl(fileName) {
+    const authResponse = await b2.authorize(); // Authorize first
+    const { downloadUrl } = authResponse.data;
+    const fileUrl = `${downloadUrl}/file/Eternity-block-storage/${fileName}`;
+
+
+    return fileUrl;
+}
+
+export const getMedia = async (req, res, next) => {
+
+    try {
+        const fileUrl = await getFileUrl(req.params.filename);
+        res.json({ url: fileUrl });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
 }

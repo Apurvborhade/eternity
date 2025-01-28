@@ -38,6 +38,24 @@ export const capsulesApi = createApi({
             }),
             providesTags: ['Capsules'],
         }),
+        getCapsuleById: builder.query<CapsuleResult, void>({
+            query: (id) => ({
+                url: `/getcapsule/${id}`,
+                method: 'GET'
+            }),
+            providesTags: ['Capsules'],
+        }),
+        getMedia: builder.query<any, any>({
+            query: (filename) => ({
+                url: `/getcapsulemedia/${filename}`,
+                method: 'GET',
+            }),
+            transformResponse: (response) => {
+                // Assuming the response has a `data` object with a `url` property
+                return response;  // Return only the URL
+            },
+            providesTags: ['Capsules'],
+        }),
         createCapsule: builder.mutation<CapsuleResult, CapsuleData>({
             query: (capsule) => {
                 const formData = new FormData();
@@ -57,13 +75,22 @@ export const capsulesApi = createApi({
                     url: '/create',
                     method: 'POST',
                     body: formData,
-                   
+
                 };
 
+            },
+            invalidatesTags: ['Capsules'],
+        }),
+        unlockCapsule: builder.mutation<any, any>({
+            query: (id) => {
+                return {
+                    url: `/unlock/${id}`,
+                    method: 'POST',
+                };
             },
             invalidatesTags: ['Capsules'],
         })
     })
 })
 
-export const { useFetchCapsulesQuery, useCreateCapsuleMutation } = capsulesApi
+export const { useFetchCapsulesQuery, useCreateCapsuleMutation, useGetCapsuleByIdQuery, useGetMediaQuery,useUnlockCapsuleMutation } = capsulesApi

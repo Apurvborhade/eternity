@@ -12,11 +12,13 @@ import { Switch } from '@/components/ui/switch'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { cn } from '@/lib/utils'
 import { Calendar } from '@/components/ui/calendar'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { format } from 'date-fns'
 import { useCreateCapsuleMutation } from '@/services/capsuleApi'
 import { Link, useNavigate } from 'react-router-dom'
 import { Icons } from '@/components/ui/icons'
+import { useSelector } from 'react-redux'
+import { RootState } from '@reduxjs/toolkit/query'
 
 interface CapsuleData {
     title: string,
@@ -27,6 +29,7 @@ interface CapsuleData {
     notification: boolean
 }
 const CreateCapsule = () => {
+    const user = useSelector((state: RootState) => state?.user)
     const [date, setDate] = React.useState<Date | undefined>()
     const navigate = useNavigate();
     
@@ -49,6 +52,11 @@ const CreateCapsule = () => {
         notification: true
     });
 
+    useEffect(() => {
+            if (!user) {
+                navigate('/login')
+            }
+        }, [user])
     const handleDateChange = (newDate: Date | undefined) => {
         setDate(newDate)
         setFormData({

@@ -35,7 +35,7 @@ const router = createBrowserRouter([
     element: <CreateCapsule />
   },
   {
-    path: '/capsule/update-capsule',
+    path: '/capsule/update-capsule/:id',
     element: <UpdateCapsule />
   },
 ])

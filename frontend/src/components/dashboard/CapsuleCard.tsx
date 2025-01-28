@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Button } from '../ui/button'
 import { Switch } from '../ui/switch'
 import { format } from 'date-fns';
+import { Link } from 'react-router-dom';
 interface Capsule {
     _id: string,
     title: string,
@@ -71,7 +72,9 @@ const CapsuleCard: React.FC<CapsuleCardProps> = ({ capsule }) => {
                     </div>
                 </div>
             </div>
-            <Button className="w-full mt-4">View Details</Button>
+            <Link to={`/capsule/update-capsule/${capsule._id}`}>
+                <Button className="w-full mt-4">View Details</Button>
+            </Link>
         </div>
     )
 }

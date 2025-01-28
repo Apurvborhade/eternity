@@ -12,11 +12,12 @@ import { Switch } from '@/components/ui/switch'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { cn } from '@/lib/utils'
 import { Calendar } from '@/components/ui/calendar'
-import React from 'react'
-import { format } from 'date-fns'
-import { useCreateCapsuleMutation } from '@/services/capsuleApi'
-import { Link, useNavigate } from 'react-router-dom'
+import React, { useEffect } from 'react'
+import { format, parseISO } from 'date-fns'
+import { capsulesApi, useCreateCapsuleMutation, useGetCapsuleByIdQuery, useGetMediaQuery, useUnlockCapsuleMutation } from '@/services/capsuleApi'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { Icons } from '@/components/ui/icons'
+import { useDispatch } from 'react-redux'
 
 interface CapsuleData {
     title: string,
@@ -27,6 +28,9 @@ interface CapsuleData {
 }
 const UpdateCapsule = () => {
     const [date, setDate] = React.useState<Date | undefined>()
+    const [media, setMedia] = React.useState()
+    const { id } = useParams()
+    const dispatch = useDispatch()
     const navigate = useNavigate();
     const [notificationSwitchValue, setNotificationSwitchValue] = React.useState(true)
     const handleNotificationSwitchChange = (checked: boolean) => {
@@ -36,7 +40,11 @@ const UpdateCapsule = () => {
             notification: notificationSwitchValue
         })
     }
+    const [unlockCapsule, { data: unlockCapsuleData, isLoading: CapsuleUnlocking, error: capsuleUnlockError }] = useUnlockCapsuleMutation()
     const [createCapsule, { isLoading, error }] = useCreateCapsuleMutation();
+    // const {data:media,error:MediaError} = useGetMediaQuery("innerve.jpg")
+
+    const { data, isLoading: capsuleIDLoading, isError } = useGetCapsuleByIdQuery(id)
     const [formData, setFormData] = React.useState<CapsuleData>({
         title: "",
         content: "",
@@ -68,25 +76,10 @@ const UpdateCapsule = () => {
             }))
         }
     }
-    React.useEffect(() => {
-        console.log(formData)
-    },[formData])
-    const saveCapsule = async () => {
-        try {
-            const capsule = await createCapsule(formData).unwrap();
-            // setFormData({
-            //     title: "",
-            //     content: "",
-            //     unlockDate: undefined,
-            //     status: "",
-            //     notification: true
-            // })
-            navigate('/dashboard')
-        } catch (error) {
-            console.log(error)
-        }
-    }
 
+    const saveCapsule = async () => {
+    }
+    const unlockDate = data?.unlockDate ? parseISO(data.unlockDate) : null;
 
 
     return (
@@ -108,21 +101,8 @@ const UpdateCapsule = () => {
                         {error && 'data' in error && (
                             <p className='text-red-600 '>*{error.data.message}</p>
                         )}
-                        <div className="hidden items-center gap-2 md:ml-auto md:flex">
-                            <Link to={'/dashboard'}>
-                                <Button variant="outline" size="sm">
-                                    Discard
-                                </Button>
-                            </Link>
-                            <Button size="sm" onClick={saveCapsule}>
-                                Save Capsule
-                                {isLoading && (
-                                    <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-                                )}
-                            </Button>
-                        </div>
                     </div>
-                    <div className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-8">
+                    <div className="py-10 grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-8">
                         <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
                             <Card x-chunk="dashboard-07-chunk-0">
                                 <CardHeader>
@@ -138,84 +118,26 @@ const UpdateCapsule = () => {
                                             <Input
                                                 id="title"
                                                 name='title'
-                                                value={formData.title}
+                                                value={data?.title}
                                                 type="text"
                                                 className="w-full"
                                                 placeholder="Goals"
-                                                onChange={handleChange}
                                             />
                                         </div>
                                         <div className="grid gap-3">
                                             <Label htmlFor="content">Content</Label>
-                                            <Textarea
-                                                id="content"
-                                                name='content'
-                                                value={formData.content}
-                                                placeholder="Capsule Content"
-                                                className="min-h-32"
-                                                onChange={handleChange}
-                                            />
-                                        </div>
-                                    </div>
-                                </CardContent>
-                            </Card>
-                            <Card
-                                className="overflow-hidden" x-chunk="dashboard-07-chunk-4"
-                            >
-                                <CardHeader>
-                                    <CardTitle>Capsule Media</CardTitle>
-                                    <CardDescription>
-                                        Lipsum dolor sit amet, consectetur adipiscing elit
-                                    </CardDescription>
-                                </CardHeader>
-                                <CardContent>
-                                    <div className="grid gap-2">
-                                        <img
-                                            alt="Product image"
-                                            className="aspect-square w-full rounded-md object-cover"
-                                            height="300"
-                                            src="https://images.unsplash.com/photo-1556559322-b5071efadc88?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                                            width="300"
-                                        />
-                                        <div className="grid grid-cols-3 gap-2">
-                                            <div className="relative">
-                                                <button>
-                                                    <img
-                                                        alt="Product image"
-                                                        className="aspect-square w-full rounded-md object-cover"
-                                                        height="84"
-                                                        src="https://images.unsplash.com/photo-1556559322-b5071efadc88?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                                                        width="84"
-                                                    />
-                                                </button>
-                                                <button className="absolute top-1 right-1 bg-white bg-opacity-10 rounded-full p-1" aria-label="Delete image">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                                        <polyline points="3 6 5 6 21 6"></polyline>
-                                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                                                    </svg>
-                                                </button>
-                                            </div>
-                                            <div className="relative">
-                                                <button>
-                                                    <img
-                                                        alt="Product image"
-                                                        className="aspect-square w-full rounded-md object-cover"
-                                                        height="84"
-                                                        src="https://images.unsplash.com/photo-1556559322-b5071efadc88?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                                                        width="84"
-                                                    />
-                                                </button>
-                                                <button className="absolute top-1 right-1 bg-white bg-opacity-10 rounded-full p-1" aria-label="Delete image">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                                        <polyline points="3 6 5 6 21 6"></polyline>
-                                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                                                    </svg>
-                                                </button>
-                                            </div>
-                                            <button className="flex aspect-square w-full items-center justify-center rounded-md border border-dashed">
-                                                <Upload className="h-4 w-4 text-muted-foreground" />
-                                                <span className="sr-only">Upload</span>
-                                            </button>
+                                            {data?.status === 'locked' ? (
+                                                <p className='text-orange-500'>Content is Locked Cannot be changed</p>
+                                            ) : (
+                                                <Textarea
+                                                    id="content"
+                                                    name='content'
+                                                    value={data?.content}
+                                                    placeholder="Capsule Content"
+                                                    className="min-h-32"
+                                                />
+
+                                            )}
                                         </div>
                                     </div>
                                 </CardContent>
@@ -231,7 +153,7 @@ const UpdateCapsule = () => {
                                     <div className="grid gap-6">
                                         <div className="grid gap-3">
                                             <Label htmlFor="status">Status</Label>
-                                            <Select defaultValue="locked" onValueChange={handleChange} value={formData.status} >
+                                            <Select defaultValue="locked" value={data?.status} >
                                                 <SelectTrigger id="status" aria-label="Select status">
                                                     <SelectValue placeholder="Select status" />
                                                 </SelectTrigger>
@@ -240,6 +162,12 @@ const UpdateCapsule = () => {
                                                     <SelectItem value="unlocked">Unlocked</SelectItem>
                                                 </SelectContent>
                                             </Select>
+                                            {data?.status === 'locked' && (
+                                                <>
+                                                    <Button onClick={() => unlockCapsule(data?._id)}>{CapsuleUnlocking ? <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />:'Unlock Capsule'}</Button>
+                                                    {capsuleUnlockError ?<p className='text-red-600'>{capsuleUnlockError.data?.message}</p>  : null}
+                                                </>
+                                            )}
                                         </div>
                                     </div>
                                 </CardContent>
@@ -269,17 +197,9 @@ const UpdateCapsule = () => {
                                         )}
                                     >
                                         <CalendarIcon className="mr-2 h-4 w-4" />
-                                        {date ? format(date, "PPP") : <span>Unlock date</span>}
+                                        {format(unlockDate, "PPP")}
                                     </Button>
                                 </PopoverTrigger>
-                                <PopoverContent className="w-full max-w-full p-0" align="start">
-                                    <Calendar
-                                        mode="single"
-                                        selected={date}
-                                        onSelect={handleDateChange}
-                                        initialFocus
-                                    />
-                                </PopoverContent>
                             </Popover>
                         </div>
                     </div>

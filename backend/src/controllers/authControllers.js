@@ -10,7 +10,7 @@ export const registerUser = async (req, res, next) => {
         res.cookie('token', results.token, {
             httpOnly: true,
             secure: true,
-            sameSite: 'Strict',
+            sameSite: 'None',
             maxAge: 3600000
         })
         res.status(200).json(results.user)

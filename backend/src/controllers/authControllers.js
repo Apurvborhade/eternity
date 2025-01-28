@@ -26,7 +26,7 @@ export const loginUser = async (req, res, next) => {
         res.cookie('token', results.token, {
             httpOnly: true,
             secure: true,
-            sameSite: 'Strict',
+            sameSite: 'None',
             maxAge: 3600000
         })
 
@@ -41,7 +41,7 @@ export const logoutUser = async (req, res, next) => {
         res.cookie('token', '', {
             httpOnly: true,
             secure: true,
-            sameSite: 'Strict',
+            sameSite: 'None',
             maxAge: new Date(0),
             maxAge: 0
         })

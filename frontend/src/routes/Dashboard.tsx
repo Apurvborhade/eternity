@@ -4,7 +4,7 @@ import { Search } from '@/components/dashboard/search'
 import { UserNav } from '@/components/dashboard/user-nav'
 import { Button } from '@/components/ui/button'
 import { Switch } from '@/components/ui/switch'
-import { getCapsule } from '@/features/capsules/capsuleSlice'
+import { getCapsule, selectFilteredCapsules } from '@/features/capsules/capsuleSlice'
 import { useFetchCapsulesQuery } from '@/services/capsuleApi'
 import { RootState } from '@/store'
 import { useEffect, useState } from 'react'
@@ -45,6 +45,7 @@ const Dashboard = () => {
             dispatch(getCapsule(data))
         }
     }, [data])
+    const capsules = useSelector((state:RootState) => state.capsule.filteredCapsules)
 
 
     // Handle the error state
@@ -68,15 +69,13 @@ const Dashboard = () => {
                     </div>
                 </div>
             </div>
+            
             <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6 min-h-screen">
                 <div className="flex items-center">
                     <h1 className="text-lg font-semibold md:text-2xl">All Capsules</h1>
                 </div>
-                <div
-                    className={` ${data?.length == 0 ? 'flex flex-1 items-center justify-center px-10 border border-dashed' : 'grid md:grid-cols-3 grid-cols-1 row-auto gap-y-10 gap-x-4'}  rounded-lg  shadow-sm  md:px-0`} x-chunk="dashboard-02-chunk-1"
-                >
-                    {data?.length == 0 && (
-                        <div className="flex flex-col items-center gap-1 text-center">
+                {capsules?.length == 0 && (
+                        <div className="flex flex-col items-center justify-center gap-1 text-center">
                             <h3 className="text-2xl font-bold tracking-tight">
                                 You have no Capsules
                             </h3>
@@ -88,12 +87,16 @@ const Dashboard = () => {
                             </Link>
                         </div>
                     )}
-                    {data?.length !== 0 && data?.map((capsule: Capsule) => (
-                        <CapsuleCard capsule={capsule} />
+                <div
+                    className={` ${data?.length == 0 ? 'flex flex-1 items-center justify-center px-10 border border-dashed' : 'grid md:grid-cols-3 grid-cols-1 row-auto gap-y-10 gap-x-4'}  rounded-lg  shadow-sm  md:px-0`} x-chunk="dashboard-02-chunk-1"
+                >
+                    
+                    {capsules?.length !== 0 && capsules?.map((capsule: Capsule) => (
+                        <CapsuleCard capsule={capsule} key={capsule._id} />
                     ))}
 
                     {/* Capsule Component */}
-                    {data?.length !== 0 && (
+                    {capsules?.length !== 0 && (
                         <Link to={"/capsule/create-capsule"} className="w-full max-w-md place-content-center place-items-center flex justify-center border border-dashed h-60 rounded">
                             <Button className="rounded-full w-10 h-10">+</Button>
                         </Link>

@@ -10,7 +10,7 @@ interface UserError {
 }
 export const usersApi = createApi({
     reducerPath: 'usersApi',
-    baseQuery: fetchBaseQuery({ baseUrl: "/api/v1/user", credentials: "include" }) as BaseQueryFn<string | FetchArgs, unknown, UserError, {}>,
+    baseQuery: fetchBaseQuery({ baseUrl: "https://eternity-backend.onrender.com/api/v1/user", credentials: "include" }) as BaseQueryFn<string | FetchArgs, unknown, UserError, {}>,
     endpoints: (builder) => ({
         registerUser: builder.mutation({
             query: (user) => ({

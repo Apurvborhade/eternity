@@ -28,7 +28,7 @@ interface CapsuleData {
 }
 export const capsulesApi = createApi({
     reducerPath: 'capsulesApi',
-    baseQuery: fetchBaseQuery({ baseUrl: "/api/v1/capsule", credentials: "include" }) as BaseQueryFn<string | FetchArgs, unknown, CapsuleEror, {}>,
+    baseQuery: fetchBaseQuery({ baseUrl: "https://eternity-backend.onrender.com/api/v1/capsule", credentials: "include" }) as BaseQueryFn<string | FetchArgs, unknown, CapsuleEror, {}>,
     tagTypes: ['Capsules'],
     endpoints: (builder) => ({
         fetchCapsules: builder.query<CapsuleResult[], void>({

@@ -22,7 +22,7 @@ app.use(cookieParser())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(
     cors({
-        origin: 'https://eternity-nine.vercel.app',
+        origin: process.env.FRONTEND_URL,
         credentials: true
     })
 )

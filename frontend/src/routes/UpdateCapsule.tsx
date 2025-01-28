@@ -79,7 +79,6 @@ const UpdateCapsule = () => {
 
     const saveCapsule = async () => {
     }
-    const unlockDate = data?.unlockDate ? parseISO(data.unlockDate) : null;
 
 
     return (
@@ -187,20 +186,6 @@ const UpdateCapsule = () => {
                                     </div>
                                 </CardContent>
                             </Card>
-                            <Popover>
-                                <PopoverTrigger asChild>
-                                    <Button
-                                        variant={"outline"}
-                                        className={cn(
-                                            "w-full justify-start text-left font-normal",
-                                            !date && "text-muted-foreground"
-                                        )}
-                                    >
-                                        <CalendarIcon className="mr-2 h-4 w-4" />
-                                        {format(unlockDate, "PPP")}
-                                    </Button>
-                                </PopoverTrigger>
-                            </Popover>
                         </div>
                     </div>
                     <div className="flex items-center justify-center gap-2 md:hidden">
